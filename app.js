@@ -110,7 +110,7 @@ class CarritoDelivery {
         localStorage.setItem("listaDeCompras", listaDeComprasJSON)
     }
     recuperarStorage() {
-        let listaDeComprasJS = JSON.parse(localStorage.getItem("listaDeCompras"))
+        let listaDeComprasJS = JSON.parse(localStorage.getItem("listaDeCompras"))||[]
         let listaAux = []
         listaDeComprasJS.forEach(comida => {
             let producto = new Comida(comida.id, comida.nombre, comida.descripcion, comida.cantidad, comida.precio, comida.img)
