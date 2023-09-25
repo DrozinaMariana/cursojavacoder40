@@ -1,6 +1,7 @@
 #lista_productos {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: space-around;
   align-items: center;
 }/*# sourceMappingURL=style.css.map */
