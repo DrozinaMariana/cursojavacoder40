@@ -113,7 +113,7 @@ class CarritoDelivery {
         let listaDeComprasJS = JSON.parse(localStorage.getItem("listaDeCompras"))||[]
         listaDeComprasJS.forEach(comida => {
             let producto = new Comida(comida.id, comida.nombre, comida.descripcion, comida.cantidad, comida.precio, comida.img)
-            listaDeCompras.push(producto)
+            this.listaDeCompras.push(producto)
         })
 
     }
