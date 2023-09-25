@@ -111,12 +111,11 @@ class CarritoDelivery {
     }
     recuperarStorage() {
         let listaDeComprasJS = JSON.parse(localStorage.getItem("listaDeCompras"))||[]
-        let listaAux = []
         listaDeComprasJS.forEach(comida => {
             let producto = new Comida(comida.id, comida.nombre, comida.descripcion, comida.cantidad, comida.precio, comida.img)
-            listaAux.push(producto)
+            listaDeCompras.push(producto)
         })
-        this.listaDeCompras = listaAux
+
     }
     eliminarComida(productoEliminar) {
         let indice = this.listaDeCompras.findIndex(producto => producto.id == productoEliminar.id)
