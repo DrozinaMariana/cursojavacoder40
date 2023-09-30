@@ -1,6 +1,32 @@
 #lista_productos {
     display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-around;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
     align-items: center;
+}
+
+section {
+    background-color: lavender;
+    h4 {
+        padding-left: 1rem;
+    }
+    .form-check {
+        padding-left: 2.25rem;
+    }
+}
+
+#lista_productos {
+    background-color: ghostwhite;
+}
+
+.modal-header {
+    background-color: ghostwhite;
+}
+
+.modal-body {
+    background-color: lightsteelblue;
+}
+
+p {
+    font-weight: 500;
 }

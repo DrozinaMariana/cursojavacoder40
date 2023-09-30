@@ -9,8 +9,7 @@ class Comida {
 
     }
     descripcionListaComida() {
-        return `
-      <div class="card" style="width: 18rem;">
+        return ` <div class="card" style="width: 18rem;">
           <img src="${this.img}" class="card-img-top" alt="...">
           <div class="card-body">
               <h5 class="card-title">${this.nombre}</h5>
@@ -18,7 +17,7 @@ class Comida {
               <p class="card-text">precio: $${this.precio}</p>             
           </div>
           <div> <button class="btn btn-primary" id="btn_ag-${this.id}"> Añadir al carrito  </button> </div>
-      </div>`
+        </div>`
     }
     descripcionCarrito() {
         return `
@@ -31,7 +30,7 @@ class Comida {
                     <div class="card-body">
                         <h5 class="card-title">${this.nombre}</h5>
                         <p class="card-text">Cantidad  <button class"btn-primary id="btn_menos-${this.id}"><i class="fa-solid fa-minus"></i></button>  ${this.cantidad}  <button class"btn-primary id="btn_mas-${this.id}"><i class="fa-solid fa-plus"></i></button></p>
-                        <p class="card-text">Precio: ${this.precio}</p>
+                        <p class="card-text">Precio: $${this.precio}</p>
                     </div>
                     <div>
                         <button class="btn btn-secondary" id="btn_eliminar-${this.id}"><i class="fa-solid fa-trash"></i></button>
@@ -45,36 +44,116 @@ class Comida {
 class ControlDeProducto {
     constructor() {
         this.listaDeComidas = []
+        this.platosFiltrados = []
     }
     agregar(comida) {
-        this.listaDeComidas.push(comida)
+        if (comida instanceof Comida) {
+            this.listaDeComidas.push(comida)
+        }
+
     }
-    cargarComidas() {
-        this.agregar(new Comida(1, "tallarines", "con salsa fileto", 3200, "https://3.bp.blogspot.com/-_uHkRMw0e68/VYFlOBUKvGI/AAAAAAAAAk0/_aE-gG9lm0I/s640/DSCN4522.JPG"))
-        this.agregar(new Comida(3, "tallarines", "con salsa bologñesa", 4300, "https://tse3.mm.bing.net/th?id=OIP.pzpRCvCGp3L2PRq9Fx-degHaGG&pid=Api&P=0&h=180"))
-        this.agregar(new Comida(4, "tallarines", "con salsa escarparo", 3500, "https://tse4.mm.bing.net/th?id=OIP.XHC8E4nA3ZRrnri1DcaEvgHaFj&pid=Api&P=0&h=180"))
-        this.agregar(new Comida(5, "ravioles", " de verdura con salsa fileto", 3200, "https://tse4.mm.bing.net/th?id=OIP.BsgzHt3D0XgBYWAL8BvhzwHaDl&pid=Api&P=0&h=180"))
-        this.agregar(new Comida(6, "ravioles", " de verdura con salsa de crema", 3500, "https://tse2.mm.bing.net/th?id=OIP.JtWOEmEr8-pn6rzmKgh2cQHaFG&pid=Api&P=0&h=180"))
-        this.agregar(new Comida(2, "tallarines", "con salsa a los 4 quesos", 4000, "https://tse3.mm.bing.net/th?id=OIP.eTVX-D0Z1ofxxYBvpsrggwHaD4&pid=Api&P=0&h=180"))
-        this.agregar(new Comida(7, "ravioles", " de verdura y pollo con salsa bologñesa", 3700, "https://tse1.mm.bing.net/th?id=OIP.bi9EZNp5Fq1i0Vaj0aWzQgHaHa&pid=Api&P=0&h=180"))
-        this.agregar(new Comida(8, "ravioles", " de verdura verdura y pollo salsa 4 quesos", 3200, "https://tse1.mm.bing.net/th?id=OIP.uh9TodJFxClTIMtT-KIUrQHaFj&pid=Api&P=0&h=180"))
+    async traerDeAPI() {
+        let lista_ProductoJSON = await fetch("simulacionAPI.json")
+        let lista_ProductoJS = await lista_ProductoJSON.json()
+        lista_ProductoJS.forEach(producto => {
+            let plato = new Comida(producto.id, producto.nombre, producto.descripcion, producto.precio, producto.img, producto.cantidad)
+            this.agregar(plato)
+        })
+        this.mostrarProductosEnDOM()
+
+
 
     }
 
-    mostrarProductosEnDOM() { // card vertical mostrar lista producto en DOM
+    mostrarProductosEnDOM() {
         let lista_Producto = document.getElementById("lista_productos")
+        lista_Producto.innerHTML = ""
         this.listaDeComidas.forEach((comida) => {
             lista_Producto.innerHTML += comida.descripcionListaComida()
         })
         this.listaDeComidas.forEach((comida) => {
             let btn_ag = document.getElementById(`btn_ag-${comida.id}`)
             btn_ag.addEventListener("click", () => {
-
                 carro.agregar(comida)
                 carro.guardarEnStorage()
                 carro.mostrarProductosEnDOM()
+                Toastify({
+                    text: `añadiendo 1 ${comida.nombre} ${comida.descripcion}!`,
+                    avatar: `${comida.img}`,
+                    position: `center`,
+                    gravity: "top",
+                    duration: 3000
+
+                }).showToast();
 
             })
+        })
+
+    }
+    mostrarComidasFiltradasEnDOM() {
+        let lista_Producto = document.getElementById("lista_productos")
+        lista_Producto.innerHTML = ""
+        this.platosFiltrados.forEach((comida) => {
+            lista_Producto.innerHTML += comida.descripcionListaComida()
+        })
+        this.platosFiltrados.forEach((comida) => {
+            let btn_ag = document.getElementById(`btn_ag-${comida.id}`)
+            btn_ag.addEventListener("click", () => {
+                carro.agregar(comida)
+                carro.guardarEnStorage()
+                carro.mostrarProductosEnDOM()
+                Toastify({
+                    text: `añadiendo 1 ${comida.nombre} ${comida.descripcion}!`,
+                    avatar: `${comida.img}`,
+                    position: `center`,
+                    gravity: "top",
+                    duration: 3000
+
+                }).showToast();
+
+
+            })
+        })
+
+    }
+    eventoFiltro() {
+        this.filtroRavioles()
+        this.filtroTallarines()
+        this.filtroAgnoloti()
+        this.todosLosPlatos()
+    }
+    filtroRavioles() {
+        this.platosFiltrados = []
+        let btn_ravioles = document.getElementById("btn_ravioles")
+        btn_ravioles.addEventListener("click", () => {
+            this.platosFiltrados = this.listaDeComidas.filter((producto) => producto.nombre == "ravioles")
+            this.mostrarComidasFiltradasEnDOM()
+        })
+    }
+    filtroAgnoloti() {
+        this.platosFiltrados = []
+        let btn_agnoloti = document.getElementById("btn_agnoloti")
+        btn_agnoloti.addEventListener("click", () => {
+            this.platosFiltrados = this.listaDeComidas.filter((producto) => producto.nombre == "Agnolotis")
+            this.mostrarComidasFiltradasEnDOM()
+        })
+    }
+    filtroTallarines() {
+        this.platosFiltrados = []
+        let btn_tallarines = document.getElementById("btn_tallarines")
+        btn_tallarines.addEventListener("click", () => {
+            this.platosFiltrados = this.listaDeComidas.filter((producto) => producto.nombre == "tallarines")
+            this.mostrarComidasFiltradasEnDOM()
+        })
+
+
+    }
+    todosLosPlatos() {
+
+        let btn_todos = document.getElementById("btn_todos")
+        btn_todos.addEventListener("click", () => {
+            this.listaDeComidas = []
+            this.traerDeAPI()
         })
 
     }
@@ -94,7 +173,7 @@ class CarritoDelivery {
             this.listaDeCompras.push(productoAgregar)
         }
     }
-    mostrarProductosEnDOM() { // card vertical mostrar lista producto en DOM
+    mostrarProductosEnDOM() {
         let lista_carrito = document.getElementById("lista_Carrito")
         lista_carrito.innerHTML = ""
         this.listaDeCompras.forEach((comida) => {
@@ -104,19 +183,20 @@ class CarritoDelivery {
         this.evento_disminuir()
         this.eventoEliminar()
         this.eventoTotal()
+        this.vaciarCarro()
+        this.eventoFinalizar()
+
     }
     guardarEnStorage() {
         let listaDeComprasJSON = JSON.stringify(this.listaDeCompras)
         localStorage.setItem("listaDeCompras", listaDeComprasJSON)
     }
     recuperarStorage() {
-       
-        let listaDeComprasJS = JSON.parse( localStorage.getItem("listaDeCompras"))||[]
+        let listaDeComprasJS = JSON.parse(localStorage.getItem("listaDeCompras")) || []
         listaDeComprasJS.forEach(comida => {
-            let producto = new Comida(comida.id, comida.nombre, comida.descripcion, comida.cantidad, comida.precio, comida.img)
+            let producto = new Comida(comida.id, comida.nombre, comida.descripcion, comida.precio, comida.img, comida.cantidad, )
             this.listaDeCompras.push(producto)
         })
-    
     }
     eliminarComida(productoEliminar) {
         let indice = this.listaDeCompras.findIndex(producto => producto.id == productoEliminar.id)
@@ -126,11 +206,49 @@ class CarritoDelivery {
         this.listaDeCompras.forEach(comida => {
             let btnEliminar = document.getElementById(`btn_eliminar-${comida.id}`)
             btnEliminar.addEventListener("click", () => {
+                swal("Eliminado!", "se elimino del del carro", "success");
                 this.eliminarComida(comida)
                 this.guardarEnStorage()
                 this.mostrarProductosEnDOM()
             })
         })
+    }
+    vaciarCarro() {
+        let btn_vaciar = document.getElementById("btn_vaciar")
+        btn_vaciar.addEventListener("click", () => {
+            if (this.listaDeCompras.length > 0) {
+
+                swal({
+                        title: "Estas seguro?",
+                        text: "¡ estas a punto de vaciar el carrito!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            this.listaDeCompras = []
+                            this.eventoTotal()
+                            this.guardarEnStorage()
+                            this.mostrarProductosEnDOM()
+                            swal("¡ el carro fue vaciado exitosamente !", {
+                                icon: "success",
+                            });
+                        } else {
+                            swal("cancelado.Los productos seguirán en el carrito!");
+                        }
+                    });
+
+
+            } else {
+                swal("¡ Upss.! ", " ...¡ No hay productos en el carrito ! ")
+            }
+
+
+
+        })
+
+
     }
     sumarCantidad(comidaAAumentar) {
         this.listaDeCompras.forEach(comida => comida.id == comidaAAumentar.id)
@@ -170,6 +288,49 @@ class CarritoDelivery {
         let total = document.getElementById("total_compra")
         total.innerText = `Total de la compra: $${this.totalCompra()}`
     }
+    eventoFinalizar() {
+        let btn_finalizar = document.getElementById("btn_finalizar")
+        btn_finalizar.addEventListener("click", () => {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Estas a punto de realizar la compra ?',
+                text: "Estas seguro de continuar?!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'si, continuar!',
+                cancelButtonText: 'No, cancelar!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.listaDeCompras=[]
+                    this.guardarEnStorage()
+                    this.mostrarProductosEnDOM()
+
+                    swalWithBootstrapButtons.fire(
+                        'Compra finalizada!',
+                        ' Gracias por su compra !!',
+                        'success'
+                    )
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        '¡ Compra Cancelada !',
+                        `puede seguir comprando`,
+                        'error'
+                    )
+                }
+            })
+        })
+    }
 }
 // principal
 
@@ -179,5 +340,5 @@ const carro = new CarritoDelivery()
 carro.recuperarStorage()
 carro.mostrarProductosEnDOM()
 
-cp.cargarComidas()
-cp.mostrarProductosEnDOM()
+cp.traerDeAPI()
+cp.eventoFiltro()
