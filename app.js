@@ -9,7 +9,8 @@ class Comida {
 
     }
     descripcionListaComida() {
-        return ` <div class="card" style="width: 18rem;">
+        return ` 
+        <div class="card" style="width: 18rem;">
           <img src="${this.img}" class="card-img-top" alt="...">
           <div class="card-body">
               <h5 class="card-title">${this.nombre}</h5>
