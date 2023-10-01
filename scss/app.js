@@ -206,7 +206,6 @@ class CarritoDelivery {
         this.listaDeCompras.forEach(comida => {
             let btnEliminar = document.getElementById(`btn_eliminar-${comida.id}`)
             btnEliminar.addEventListener("click", () => {
-                swal("Se elimino!", "el producto fue eliminado del carrito!", "success");
                 this.eliminarComida(comida)
                 this.guardarEnStorage()
                 this.mostrarProductosEnDOM()
@@ -309,9 +308,6 @@ class CarritoDelivery {
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.listaDeCompras=[]
-                    this.guardarEnStorage()
-                    this.mostrarProductosEnDOM()
                     swalWithBootstrapButtons.fire(
                         'Compra finalizada!',
                         ' Gracias por su compra !!',
