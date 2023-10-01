@@ -9,8 +9,7 @@ class Comida {
 
     }
     descripcionListaComida() {
-        return ` 
-        <div class="card" style="width: 18rem;">
+        return ` <div class="card" style="width: 18rem;">
           <img src="${this.img}" class="card-img-top" alt="...">
           <div class="card-body">
               <h5 class="card-title">${this.nombre}</h5>
@@ -125,7 +124,7 @@ class ControlDeProducto {
     }
     filtroRavioles() {
         this.platosFiltrados = []
-        let btn_ravioles = document.getElementById("btn_ravioles")
+        let btn_ravioles = document.getElementById("flexRadioDefault1")
         btn_ravioles.addEventListener("click", () => {
             this.platosFiltrados = this.listaDeComidas.filter((producto) => producto.nombre == "ravioles")
             this.mostrarComidasFiltradasEnDOM()
@@ -133,7 +132,7 @@ class ControlDeProducto {
     }
     filtroAgnoloti() {
         this.platosFiltrados = []
-        let btn_agnoloti = document.getElementById("btn_agnoloti")
+        let btn_agnoloti = document.getElementById("flexRadioDefault3")
         btn_agnoloti.addEventListener("click", () => {
             this.platosFiltrados = this.listaDeComidas.filter((producto) => producto.nombre == "Agnolotis")
             this.mostrarComidasFiltradasEnDOM()
@@ -141,7 +140,7 @@ class ControlDeProducto {
     }
     filtroTallarines() {
         this.platosFiltrados = []
-        let btn_tallarines = document.getElementById("btn_tallarines")
+        let btn_tallarines = document.getElementById("flexRadioDefault2")
         btn_tallarines.addEventListener("click", () => {
             this.platosFiltrados = this.listaDeComidas.filter((producto) => producto.nombre == "tallarines")
             this.mostrarComidasFiltradasEnDOM()
@@ -151,7 +150,7 @@ class ControlDeProducto {
     }
     todosLosPlatos() {
 
-        let btn_todos = document.getElementById("btn_todos")
+        let btn_todos = document.getElementById("flexRadioDefault4")
         btn_todos.addEventListener("click", () => {
             this.listaDeComidas = []
             this.traerDeAPI()
@@ -291,43 +290,49 @@ class CarritoDelivery {
     eventoFinalizar() {
         let btn_finalizar = document.getElementById("btn_finalizar")
         btn_finalizar.addEventListener("click", () => {
-            const swalWithBootstrapButtons = Swal.mixin({
-                customClass: {
-                    confirmButton: 'btn btn-success',
-                    cancelButton: 'btn btn-danger'
-                },
-                buttonsStyling: false
-            })
-
-            swalWithBootstrapButtons.fire({
-                title: 'Estas a punto de realizar la compra ?',
-                text: "Estas seguro de continuar?!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'si, continuar!',
-                cancelButtonText: 'No, cancelar!',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    this.listaDeCompras=[]
-                    this.guardarEnStorage()
-                    this.mostrarProductosEnDOM()
-                    swalWithBootstrapButtons.fire(
-                        'Compra finalizada!',
-                        ' Gracias por su compra !!',
-                        'success'
-                    )
-                } else if (
-                    /* Read more about handling dismissals below */
-                    result.dismiss === Swal.DismissReason.cancel
-                ) {
-                    swalWithBootstrapButtons.fire(
-                        '¡ Compra Cancelada !',
-                        `puede seguir comprando`,
-                        'error'
-                    )
-                }
-            })
+            if (this.listaDeCompras.length>0){
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                })
+    
+                swalWithBootstrapButtons.fire({
+                    title: 'Estas a punto de realizar la compra ?',
+                    text: "Estas seguro de continuar?!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'si, continuar!',
+                    cancelButtonText: 'No, cancelar!',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.listaDeCompras=[]
+                        this.guardarEnStorage()
+                        this.mostrarProductosEnDOM()
+                        swalWithBootstrapButtons.fire(
+                            'Compra finalizada!',
+                            ' Gracias por su compra !!',
+                            'success'
+                        )
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalWithBootstrapButtons.fire(
+                            '¡ Compra Cancelada !',
+                            `puede seguir comprando`,
+                            'error'
+                        )
+                    }
+                })
+            }
+            else{
+                swal("¡ Upss.! ", " ...¡ No hay productos en el carrito ! ")
+            }
+            
         })
     }
 }
